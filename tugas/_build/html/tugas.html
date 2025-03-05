@@ -394,6 +394,14 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#profiling-data-set-iris"><strong>Profiling data set IRIS</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-data"><strong>Visualisasi Data</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tipe-tipe-data"><strong>Tipe-tipe Data</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-menggunakan-metode-k-nn"><strong>Deteksi Outlier Menggunakan Metode K-NN</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-data-outlier"><strong>Apa Itu Data Outlier?</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penyebab-munculnya-outlier"><strong>Penyebab Munculnya Outlier</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-metode-k-nearest-neighbors-knn-untuk-deteksi-outlier"><strong>Penjelasan Metode K-Nearest Neighbors (KNN) untuk Deteksi Outlier</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bagaimana-knn-digunakan-untuk-deteksi-outlier"><strong>Bagaimana KNN Digunakan untuk Deteksi Outlier?</strong></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -490,6 +498,30 @@ Requirement already satisfied: mysql-connector-python in /usr/local/python/3.12.
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install sqlalchemy
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: sqlalchemy in /usr/local/python/3.12.1/lib/python3.12/site-packages (2.0.38)
+Requirement already satisfied: greenlet!=0.4.17 in /usr/local/python/3.12.1/lib/python3.12/site-packages (from sqlalchemy) (3.1.1)
+Requirement already satisfied: typing-extensions&gt;=4.6.0 in /home/codespace/.local/lib/python3.12/site-packages (from sqlalchemy) (4.12.2)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> A new release of pip is available: <span class=" -Color -Color-Red">24.3.1</span> -&gt; <span class=" -Color -Color-Green">25.0.1</span>
+<span class=" -Color -Color-Bold">[</span><span class=" -Color -Color-Blue">notice</span><span class=" -Color -Color-Bold">]</span> To update, run: <span class=" -Color -Color-Green">python3 -m pip install --upgrade pip</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Note: you may need to restart the kernel to use updated packages.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Mengimport Library yang dibutuhkan dalam proses</span>
 <span class="kn">import</span> <span class="nn">pymysql</span>
 <span class="kn">import</span> <span class="nn">psycopg2</span>
@@ -502,6 +534,10 @@ Requirement already satisfied: mysql-connector-python in /usr/local/python/3.12.
 <span class="kn">import</span> <span class="nn">base64</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">LocalOutlierFactor</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">NearestNeighbors</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
 </pre></div>
 </div>
 </div>
@@ -605,7 +641,7 @@ Requirement already satisfied: mysql-connector-python in /usr/local/python/3.12.
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>      id           class  petal length  petal width
-0      1     Iris-setosa           1.4          0.2
+0      1     Iris-setosa          86.4         70.2
 1      2     Iris-setosa           1.4          0.2
 2      3     Iris-setosa           1.3          0.2
 3      4     Iris-setosa           1.5          0.2
@@ -620,17 +656,17 @@ Requirement already satisfied: mysql-connector-python in /usr/local/python/3.12.
 [150 rows x 4 columns]
 
       id           Class  sepal_length  sepal_width
-0      1     Iris-setosa           5.1          3.5
-1      2     Iris-setosa           4.9          3.0
-2      3     Iris-setosa           4.7          3.2
-3      4     Iris-setosa           4.6          3.1
-4      5     Iris-setosa           5.0          3.6
+0      2     Iris-setosa           4.9          3.0
+1      3     Iris-setosa           4.7          3.2
+2      4     Iris-setosa           4.6          3.1
+3      5     Iris-setosa           5.0          3.6
+4      6     Iris-setosa           5.4          3.9
 ..   ...             ...           ...          ...
-145  146  Iris-virginica           6.7          3.0
-146  147  Iris-virginica           6.3          2.5
-147  148  Iris-virginica           6.5          3.0
-148  149  Iris-virginica           6.2          3.4
-149  150  Iris-virginica           5.9          3.0
+145  147  Iris-virginica           6.3          2.5
+146  148  Iris-virginica           6.5          3.0
+147  149  Iris-virginica           6.2          3.4
+148  150  Iris-virginica           5.9          3.0
+149    1     Iris-setosa          20.1         30.5
 
 [150 rows x 4 columns]
 </pre></div>
@@ -651,7 +687,7 @@ Requirement already satisfied: mysql-connector-python in /usr/local/python/3.12.
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>      id           class  petal length  petal width           Class  \
-0      1     Iris-setosa           1.4          0.2     Iris-setosa   
+0      1     Iris-setosa          86.4         70.2     Iris-setosa   
 1      2     Iris-setosa           1.4          0.2     Iris-setosa   
 2      3     Iris-setosa           1.3          0.2     Iris-setosa   
 3      4     Iris-setosa           1.5          0.2     Iris-setosa   
@@ -664,7 +700,7 @@ Requirement already satisfied: mysql-connector-python in /usr/local/python/3.12.
 149  150  Iris-virginica           5.1          1.8  Iris-virginica   
 
      sepal_length  sepal_width  
-0             5.1          3.5  
+0            20.1         30.5  
 1             4.9          3.0  
 2             4.7          3.2  
 3             4.6          3.1  
@@ -697,7 +733,7 @@ Requirement already satisfied: mysql-connector-python in /usr/local/python/3.12.
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Berikut ini adalah tampilan data yang diambil dari database :
 
       id           class  petal length  petal width  sepal_length  sepal_width
-0      1     Iris-setosa           1.4          0.2           5.1          3.5
+0      1     Iris-setosa          86.4         70.2          20.1         30.5
 1      2     Iris-setosa           1.4          0.2           4.9          3.0
 2      3     Iris-setosa           1.3          0.2           4.7          3.2
 3      4     Iris-setosa           1.5          0.2           4.6          3.1
@@ -751,13 +787,13 @@ None
 
                id  petal length  petal width  sepal_length  sepal_width
 count  150.000000    150.000000   150.000000    150.000000   150.000000
-mean    75.500000      3.758667     1.198667      5.843333     3.054000
-std     43.445368      1.764420     0.763161      0.828066     0.433594
+mean    75.500000      4.325333     1.665333      5.943333     3.234000
+std     43.445368      6.970563     5.684253      1.426895     2.282464
 min      1.000000      1.000000     0.100000      4.300000     2.000000
 25%     38.250000      1.600000     0.300000      5.100000     2.800000
-50%     75.500000      4.350000     1.300000      5.800000     3.000000
+50%     75.500000      4.400000     1.300000      5.800000     3.000000
 75%    112.750000      5.100000     1.800000      6.400000     3.300000
-max    150.000000      6.900000     2.500000      7.900000     4.400000
+max    150.000000     86.400000    70.200000     20.100000    30.500000
 
 id              0
 class           0
@@ -869,7 +905,7 @@ Berikut beberapa contoh visualisasi data:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/7b48757f334277c38c35070602e639ad96f6da57886ad9721da67b0efdf51a17.png" src="_images/7b48757f334277c38c35070602e639ad96f6da57886ad9721da67b0efdf51a17.png" />
+<img alt="_images/714b4c38d0c6cca5fd5fb35e583a27bf41aa93584af2dbdab347ad6b4ade93f2.png" src="_images/714b4c38d0c6cca5fd5fb35e583a27bf41aa93584af2dbdab347ad6b4ade93f2.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -885,7 +921,7 @@ Berikut beberapa contoh visualisasi data:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/a2a53fc6b64ccae7efd5cfa565044c978f60744cec9955ad1d07cf859becbaeb.png" src="_images/a2a53fc6b64ccae7efd5cfa565044c978f60744cec9955ad1d07cf859becbaeb.png" />
+<img alt="_images/3767a9207859a24e7133499bc8a5cc7fc2a0a774222b21135edc5e0a8e693a76.png" src="_images/3767a9207859a24e7133499bc8a5cc7fc2a0a774222b21135edc5e0a8e693a76.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -912,7 +948,7 @@ Berikut beberapa contoh visualisasi data:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/4cb521aa8b0fccd522a193def3fdb74f447480a319f68099c9b22ff2c626f0c5.png" src="_images/4cb521aa8b0fccd522a193def3fdb74f447480a319f68099c9b22ff2c626f0c5.png" />
+<img alt="_images/642906517984e0b300bb49fc8499c251489214ec3a6caaa9ed485534d4302dd2.png" src="_images/642906517984e0b300bb49fc8499c251489214ec3a6caaa9ed485534d4302dd2.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -934,9 +970,245 @@ Berikut beberapa contoh visualisasi data:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/1c80206a9039025d65d39093b74a97fb9ec2fb47d3e5a6b5e091a3f3f828199a.png" src="_images/1c80206a9039025d65d39093b74a97fb9ec2fb47d3e5a6b5e091a3f3f828199a.png" />
+<img alt="_images/7afb6d3f58652a1e970833884d7722fa69b4ba71aa1c2e6be9728d44d61944f8.png" src="_images/7afb6d3f58652a1e970833884d7722fa69b4ba71aa1c2e6be9728d44d61944f8.png" />
 </div>
 </div>
+</section>
+<section id="tipe-tipe-data">
+<h2><strong>Tipe-tipe Data</strong><a class="headerlink" href="#tipe-tipe-data" title="Link to this heading">#</a></h2>
+<p>Ketika kita mempelajari data mining tentunya objek yang paling utama diolah adalah data itu sendiri. Data adalah sekumpulan fakta atau objek dan atributnya. Atribut merupakn karakteristik atau properti dari objek tertentu. Jenis atribut atau nilai dari kolom ada beberapa, diantaranya adalah :</p>
+<ol class="arabic simple">
+<li><p>Nominal yang merupakan kategori class yang tidak memiliki perbedaan nilai atau rangking. Contoh pekerjaan (Dosen, PNS).</p></li>
+<li><p>Binary merupakan atribut yang tidak memiliki perbedaan dan hanya memiliki 2 states, contohnya seperti jenis kelamin (perempuan, laki-laki).</p></li>
+<li><p>Ordinal merupakan kategori class yang memiliki nilai rangking, contohnya seperti jabatan, jenjang pendidikan, dll.</p></li>
+<li><p>Numeric merupakan kuantitas yang memiliki ukuran nilai yang memiliki jarak yang jelas, contohnya adalah umur. Numeric ini memiliki 2 jenis, yaitu rasio dan interval.</p></li>
+</ol>
+</section>
+<section id="deteksi-outlier-menggunakan-metode-k-nn">
+<h2><strong>Deteksi Outlier Menggunakan Metode K-NN</strong><a class="headerlink" href="#deteksi-outlier-menggunakan-metode-k-nn" title="Link to this heading">#</a></h2>
+<section id="apa-itu-data-outlier">
+<h3><strong>Apa Itu Data Outlier?</strong><a class="headerlink" href="#apa-itu-data-outlier" title="Link to this heading">#</a></h3>
+<p>Outlier adalah data yang memiliki nilai yang jauh berbeda atau menyimpang dari sebagian besar data lainnya dalam suatu dataset. Outlier bisa sangat tinggi atau sangat rendah dibandingkan dengan nilai lainnya, sehingga dapat mempengaruhi analisis statistik dan pemodelan data.</p>
+</section>
+<section id="penyebab-munculnya-outlier">
+<h3><strong>Penyebab Munculnya Outlier</strong><a class="headerlink" href="#penyebab-munculnya-outlier" title="Link to this heading">#</a></h3>
+<p>Outlier dapat muncul karena berbagai alasan, di antaranya:</p>
+<p>Kesalahan Pengukuran → Data yang dicatat secara tidak akurat (misalnya kesalahan input atau alat ukur yang tidak kalibrasi).</p>
+<p>Variasi Alami → Beberapa fenomena memang memiliki data ekstrem, seperti gaji eksekutif perusahaan dibandingkan dengan karyawan biasa.</p>
+<p>Kesalahan Entri Data → Misalnya, seseorang salah memasukkan usia 250 tahun dalam kolom usia.</p>
+<p>Perubahan dalam Sistem atau Proses → Misalnya, perubahan kebijakan yang menyebabkan lonjakan atau penurunan drastis dalam data.</p>
+</section>
+<section id="penjelasan-metode-k-nearest-neighbors-knn-untuk-deteksi-outlier">
+<h3><strong>Penjelasan Metode K-Nearest Neighbors (KNN) untuk Deteksi Outlier</strong><a class="headerlink" href="#penjelasan-metode-k-nearest-neighbors-knn-untuk-deteksi-outlier" title="Link to this heading">#</a></h3>
+<p>K-Nearest Neighbors (KNN) adalah algoritma non-parametrik yang digunakan dalam klasifikasi dan regresi. Prinsip utamanya adalah menganalisis kedekatan (jarak) antara suatu data dengan data lainnya. Dalam konteks deteksi outlier, KNN dapat digunakan untuk menemukan data yang memiliki sedikit tetangga terdekat, yang berarti data tersebut kemungkinan adalah outlier.</p>
+</section>
+<section id="bagaimana-knn-digunakan-untuk-deteksi-outlier">
+<h3><strong>Bagaimana KNN Digunakan untuk Deteksi Outlier?</strong><a class="headerlink" href="#bagaimana-knn-digunakan-untuk-deteksi-outlier" title="Link to this heading">#</a></h3>
+<p>Metode KNN untuk outlier detection bekerja dengan cara:</p>
+<ol class="arabic simple">
+<li><p>Menghitung jarak (distance metric) antara suatu titik dengan k titik terdekat lainnya dalam dataset.</p></li>
+<li><p>Menentukan threshold berdasarkan rata-rata atau median dari jarak tetangga terdekat.</p></li>
+<li><p>Menandai data sebagai outlier jika jaraknya jauh lebih besar dari threshold yang ditentukan.</p></li>
+</ol>
+<p>Umumnya, metode KNN untuk deteksi outlier menggunakan Distance-Based Outlier Detection (DBOD), di mana suatu titik dianggap outlier jika memiliki rata-rata jarak yang jauh dibandingkan dengan data lainnya.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 🔹 1. Pilih Fitur Numerik untuk Analisis Outlier</span>
+<span class="n">numeric_features</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sepal_length&quot;</span><span class="p">,</span> <span class="s2">&quot;sepal_width&quot;</span><span class="p">,</span> <span class="s2">&quot;petal length&quot;</span><span class="p">,</span> <span class="s2">&quot;petal width&quot;</span><span class="p">]</span>
+<span class="n">df_filtered</span> <span class="o">=</span> <span class="n">merge_df</span><span class="p">[</span><span class="n">numeric_features</span><span class="p">]</span>
+
+<span class="c1"># 🔹 2. Terapkan KNN (Local Outlier Factor)</span>
+<span class="n">lof</span> <span class="o">=</span> <span class="n">LocalOutlierFactor</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">contamination</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>  <span class="c1"># 5% data dianggap outlier</span>
+<span class="n">outlier_labels</span> <span class="o">=</span> <span class="n">lof</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">df_filtered</span><span class="p">)</span>
+
+<span class="c1"># 🔹 3. Tambahkan Label Outlier ke DataFrame</span>
+<span class="n">merge_df</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">outlier_labels</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Yes&quot;</span><span class="p">,</span> <span class="s2">&quot;No&quot;</span><span class="p">)</span>
+<span class="n">merge_df</span><span class="p">[</span><span class="s2">&quot;outlier_color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">merge_df</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s2">&quot;Yes&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;No&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">})</span>
+
+<span class="c1"># 🔹 4. Tampilkan Hanya Data yang Termasuk Outlier</span>
+<span class="n">outliers</span> <span class="o">=</span> <span class="n">merge_df</span><span class="p">[</span><span class="n">merge_df</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;✅ Outlier Detection Selesai!&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">outliers</span><span class="p">)</span>
+
+<span class="c1"># Menampilkan jumlah outlier</span>
+<span class="n">jumlah_outlier</span> <span class="o">=</span> <span class="n">outliers</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔴 Jumlah outlier yang terdeteksi: </span><span class="si">{</span><span class="n">jumlah_outlier</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Menampilkan indeks dari data yang outlier</span>
+<span class="n">indeks_outlier</span> <span class="o">=</span> <span class="n">outliers</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📌 Indeks data yang merupakan outlier: </span><span class="si">{</span><span class="n">indeks_outlier</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 🔹 5. Visualisasi Outlier dengan Pairplot</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">merge_df</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;outlier&quot;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="n">numeric_features</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Yes&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;No&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">})</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Pairplot dengan Highlight Outlier&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.02</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ Outlier Detection Selesai!
+      id            class  petal length  petal width            Class  \
+0      1      Iris-setosa          86.4         70.2      Iris-setosa   
+22    23      Iris-setosa           1.0          0.2      Iris-setosa   
+24    25      Iris-setosa           1.9          0.2      Iris-setosa   
+41    42      Iris-setosa           1.3          0.3      Iris-setosa   
+62    63  Iris-versicolor           4.0          1.0  Iris-versicolor   
+106  107   Iris-virginica           4.5          1.7   Iris-virginica   
+109  110   Iris-virginica           6.1          2.5   Iris-virginica   
+134  135   Iris-virginica           5.6          1.4   Iris-virginica   
+
+     sepal_length  sepal_width outlier outlier_color  
+0            20.1         30.5     Yes           red  
+22            4.6          3.6     Yes           red  
+24            4.8          3.4     Yes           red  
+41            4.5          2.3     Yes           red  
+62            6.0          2.2     Yes           red  
+106           4.9          2.5     Yes           red  
+109           7.2          3.6     Yes           red  
+134           6.1          2.6     Yes           red  
+🔴 Jumlah outlier yang terdeteksi: 8
+📌 Indeks data yang merupakan outlier: [0, 22, 24, 41, 62, 106, 109, 134]
+</pre></div>
+</div>
+<img alt="_images/7fa27f1cbee3ca79ddab7a65c885c3dc900aca55dead3dd120cf2bd88db87d49.png" src="_images/7fa27f1cbee3ca79ddab7a65c885c3dc900aca55dead3dd120cf2bd88db87d49.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 🔹 1. Pilih fitur numerik untuk analisis outlier</span>
+<span class="n">numeric_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;petal length&quot;</span><span class="p">,</span> <span class="s2">&quot;petal width&quot;</span><span class="p">,</span> <span class="s2">&quot;sepal_length&quot;</span><span class="p">,</span> <span class="s2">&quot;sepal_width&quot;</span><span class="p">]</span>
+<span class="n">data_numeric</span> <span class="o">=</span> <span class="n">merge_df</span><span class="p">[</span><span class="n">numeric_columns</span><span class="p">]</span>
+
+<span class="c1"># 🔹 2. Normalisasi data agar skala fitur seragam</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">data_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data_numeric</span><span class="p">)</span>
+
+<span class="c1"># 🔹 3. Deteksi Outliers menggunakan k-NN</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Bisa disesuaikan</span>
+<span class="n">nbrs</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+<span class="n">nbrs</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_scaled</span><span class="p">)</span>
+<span class="n">distances</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">nbrs</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">data_scaled</span><span class="p">)</span>
+
+<span class="c1"># Gunakan jarak ke tetangga ke-k sebagai skor outlier</span>
+<span class="n">outlier_scores</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># 🔹 4. Tentukan threshold outlier (contoh: ambil 5% data dengan skor tertinggi)</span>
+<span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">outlier_scores</span><span class="p">,</span> <span class="mi">95</span><span class="p">)</span>
+<span class="n">outliers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">outlier_scores</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Index outlier</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Jumlah outliers yang terdeteksi: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">outliers</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Index data outliers:&quot;</span><span class="p">,</span> <span class="n">outliers</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data Outliers:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">merge_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">outliers</span><span class="p">])</span>
+
+<span class="c1"># 🔹 5. Visualisasi dengan PCA untuk reduksi dimensi</span>
+<span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">data_pca</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data_scaled</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data_pca</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">data_pca</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Normal Data&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data_pca</span><span class="p">[</span><span class="n">outliers</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">data_pca</span><span class="p">[</span><span class="n">outliers</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Outliers&quot;</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;PCA Component 1&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;PCA Component 2&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Deteksi Outliers dengan k-NN&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jumlah outliers yang terdeteksi: 8
+Index data outliers: [  0  14  15  41  60 109 117 131]
+Data Outliers:
+      id            class  petal length  petal width            Class  \
+0      1      Iris-setosa          86.4         70.2      Iris-setosa   
+14    15      Iris-setosa           1.2          0.2      Iris-setosa   
+15    16      Iris-setosa           1.5          0.4      Iris-setosa   
+41    42      Iris-setosa           1.3          0.3      Iris-setosa   
+60    61  Iris-versicolor           3.5          1.0  Iris-versicolor   
+109  110   Iris-virginica           6.1          2.5   Iris-virginica   
+117  118   Iris-virginica           6.7          2.2   Iris-virginica   
+131  132   Iris-virginica           6.4          2.0   Iris-virginica   
+
+     sepal_length  sepal_width outlier outlier_color  
+0            20.1         30.5     Yes           red  
+14            5.8          4.0      No          blue  
+15            5.7          4.4      No          blue  
+41            4.5          2.3     Yes           red  
+60            5.0          2.0      No          blue  
+109           7.2          3.6     Yes           red  
+117           7.7          3.8      No          blue  
+131           7.9          3.8      No          blue  
+</pre></div>
+</div>
+<img alt="_images/11c018008be244a0f1d3ee36be738be8dacc159a860d784a30702645915272d2.png" src="_images/11c018008be244a0f1d3ee36be738be8dacc159a860d784a30702645915272d2.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 🔹 1. Pilih fitur numerik untuk analisis outlier</span>
+<span class="n">numeric_features</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sepal_length&quot;</span><span class="p">,</span> <span class="s2">&quot;sepal_width&quot;</span><span class="p">,</span> <span class="s2">&quot;petal length&quot;</span><span class="p">,</span> <span class="s2">&quot;petal width&quot;</span><span class="p">]</span>
+<span class="n">df_filtered</span> <span class="o">=</span> <span class="n">merge_df</span><span class="p">[</span><span class="n">numeric_features</span><span class="p">]</span>
+
+<span class="c1"># 🔹 2. Normalisasi data agar skala fitur seragam</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">data_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df_filtered</span><span class="p">)</span>
+
+<span class="c1"># 🔹 3. Deteksi Outliers menggunakan LOF</span>
+<span class="n">lof</span> <span class="o">=</span> <span class="n">LocalOutlierFactor</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">contamination</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">outlier_labels_lof</span> <span class="o">=</span> <span class="n">lof</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">data_scaled</span><span class="p">)</span>
+
+<span class="c1"># 🔹 4. Deteksi Outliers menggunakan k-NN Distance</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">nbrs</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+<span class="n">nbrs</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_scaled</span><span class="p">)</span>
+<span class="n">distances</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">nbrs</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">data_scaled</span><span class="p">)</span>
+<span class="n">outlier_scores_knn</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Tentukan threshold outlier (ambil 5% data dengan jarak tertinggi)</span>
+<span class="n">threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">outlier_scores_knn</span><span class="p">,</span> <span class="mi">95</span><span class="p">)</span>
+<span class="n">outliers_knn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">outlier_scores_knn</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Index outlier dari k-NN</span>
+
+<span class="c1"># 🔹 5. Gabungkan hasil LOF &amp; k-NN</span>
+<span class="n">merge_df</span><span class="p">[</span><span class="s2">&quot;outlier_lof&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">outlier_labels_lof</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Yes&quot;</span><span class="p">,</span> <span class="s2">&quot;No&quot;</span><span class="p">)</span>
+<span class="n">merge_df</span><span class="p">[</span><span class="s2">&quot;outlier_knn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">merge_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">outliers_knn</span><span class="p">),</span> <span class="s2">&quot;Yes&quot;</span><span class="p">,</span> <span class="s2">&quot;No&quot;</span><span class="p">)</span>
+
+<span class="c1"># Jika kedua metode menyatakan &quot;Yes&quot;, baru dianggap outlier</span>
+<span class="n">merge_df</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">merge_df</span><span class="p">[</span><span class="s2">&quot;outlier_lof&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">merge_df</span><span class="p">[</span><span class="s2">&quot;outlier_knn&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span><span class="p">),</span> <span class="s2">&quot;Yes&quot;</span><span class="p">,</span> <span class="s2">&quot;No&quot;</span><span class="p">)</span>
+
+<span class="c1"># 🔹 6. Tampilkan jumlah dan indeks outlier</span>
+<span class="n">outliers_final</span> <span class="o">=</span> <span class="n">merge_df</span><span class="p">[</span><span class="n">merge_df</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span><span class="p">]</span>
+<span class="n">jumlah_outlier</span> <span class="o">=</span> <span class="n">outliers_final</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">indeks_outlier</span> <span class="o">=</span> <span class="n">outliers_final</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔴 Jumlah outlier yang terdeteksi (LOF + k-NN): </span><span class="si">{</span><span class="n">jumlah_outlier</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📌 Indeks data yang merupakan outlier: </span><span class="si">{</span><span class="n">indeks_outlier</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 🔹 7. Visualisasi dengan PCA</span>
+<span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">data_pca</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data_scaled</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data_pca</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">data_pca</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Normal Data&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data_pca</span><span class="p">[</span><span class="n">indeks_outlier</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">data_pca</span><span class="p">[</span><span class="n">indeks_outlier</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Outliers&quot;</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;PCA Component 1&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;PCA Component 2&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Deteksi Outliers dengan Hybrid LOF &amp; k-NN&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>🔴 Jumlah outlier yang terdeteksi (LOF + k-NN): 4
+📌 Indeks data yang merupakan outlier: [0, 41, 109, 131]
+</pre></div>
+</div>
+<img alt="_images/67fcc50e31bf662292b403d97ca774d2d96da22006172e710dcfafa367b1c220.png" src="_images/67fcc50e31bf662292b403d97ca774d2d96da22006172e710dcfafa367b1c220.png" />
+</div>
+</div>
+</section>
 </section>
 </section>
 
@@ -1013,6 +1285,14 @@ Berikut beberapa contoh visualisasi data:</p>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#profiling-data-set-iris"><strong>Profiling data set IRIS</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-data"><strong>Visualisasi Data</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tipe-tipe-data"><strong>Tipe-tipe Data</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deteksi-outlier-menggunakan-metode-k-nn"><strong>Deteksi Outlier Menggunakan Metode K-NN</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-data-outlier"><strong>Apa Itu Data Outlier?</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penyebab-munculnya-outlier"><strong>Penyebab Munculnya Outlier</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-metode-k-nearest-neighbors-knn-untuk-deteksi-outlier"><strong>Penjelasan Metode K-Nearest Neighbors (KNN) untuk Deteksi Outlier</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bagaimana-knn-digunakan-untuk-deteksi-outlier"><strong>Bagaimana KNN Digunakan untuk Deteksi Outlier?</strong></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
