@@ -381,12 +381,15 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-lof"><strong>Apa Itu LOF?</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cara-kerja-lof"><strong>Cara Kerja LOF</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perbandingan-hasil-lof-manual-vs-scikit-learn"><strong>Perbandingan Hasil LOF Manual vs Scikit-learn</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perbandingan-hasil-lof-manual-vs-scikit-learn"><strong>Perbandingan Hasil LOF Manual vs Scikit-learn</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-menghitung-jarak-euclidean"><strong>Langkah 1: Menghitung Jarak Euclidean</strong></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-perhitungan-lof-manual"><strong>Langkah Perhitungan LOF Manual</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-menentukan-3-nn-3-tetangga-terdekat"><strong>Langkah 1: Menentukan 3-NN (3 Tetangga Terdekat)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-menghitung-jarak-keterjangkauan-reachability-distance"><strong>Langkah 2: Menghitung Jarak Keterjangkauan (Reachability Distance)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-menghitung-kepadatan-lokal-local-reachability-density-lrd"><strong>Langkah 3: Menghitung Kepadatan Lokal (Local Reachability Density - LRD)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-4-menghitung-lof"><strong>Langkah 4: Menghitung LOF</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-menentukan-3-nn-3-tetangga-terdekat"><strong>Langkah 2: Menentukan 3-NN (3 Tetangga Terdekat)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-menghitung-jarak-keterjangkauan-reachability-distance"><strong>Langkah 3: Menghitung Jarak Keterjangkauan (Reachability Distance)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-4-menghitung-kepadatan-lokal-local-reachability-density-lrd"><strong>Langkah 4: Menghitung Kepadatan Lokal (Local Reachability Density - LRD)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-5-menghitung-lof"><strong>Langkah 5: Menghitung LOF</strong></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-dengan-scikit-learn"><strong>Implementasi dengan Scikit-learn</strong></a></li>
@@ -517,11 +520,65 @@ document.write(`
 </tbody>
 </table>
 </div>
+<section id="langkah-1-menghitung-jarak-euclidean">
+<h3><strong>Langkah 1: Menghitung Jarak Euclidean</strong><a class="headerlink" href="#langkah-1-menghitung-jarak-euclidean" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">cdist</span>
+
+<span class="c1"># Data</span>
+<span class="n">points</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span>
+    <span class="s1">&#39;E&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="s1">&#39;F&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">),</span> <span class="s1">&#39;G&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">11</span><span class="p">),</span> <span class="s1">&#39;H&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">12</span><span class="p">),</span> <span class="s1">&#39;I&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="s1">&#39;J&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">points</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">points</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+<span class="c1"># Langkah 1: Menghitung Jarak Euclidean</span>
+<span class="n">dist_matrix</span> <span class="o">=</span> <span class="n">cdist</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">)</span>
+<span class="n">dist_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dist_matrix</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">names</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Langkah 1: Tabel Jarak Euclidean&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dist_df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Langkah 1: Tabel Jarak Euclidean
+           A          B          C          D          E          F  \
+A   0.000000   1.000000   1.000000  56.568542   2.000000   1.414214   
+B   1.000000   0.000000   1.414214  55.865911   1.000000   2.236068   
+C   1.000000   1.414214   0.000000  55.865911   2.236068   2.236068   
+D  56.568542  55.865911  55.865911   0.000000  55.172457  57.982756   
+E   2.000000   1.000000   2.236068  55.172457   0.000000   3.162278   
+F   1.414214   2.236068   2.236068  57.982756   3.162278   0.000000   
+G   1.414214   1.000000   1.000000  55.154329   1.414214   2.828427   
+H   2.000000   2.236068   1.000000  55.172457   2.828427   3.162278   
+I   1.000000   2.000000   1.414214  57.280014   3.000000   1.000000   
+J   2.828427   3.605551   3.605551  59.396970   4.472136   1.414214   
+
+           G          H          I          J  
+A   1.414214   2.000000   1.000000   2.828427  
+B   1.000000   2.236068   2.000000   3.605551  
+C   1.000000   1.000000   1.414214   3.605551  
+D  55.154329  55.172457  57.280014  59.396970  
+E   1.414214   2.828427   3.000000   4.472136  
+F   2.828427   3.162278   1.000000   1.414214  
+G   0.000000   1.414214   2.236068   4.242641  
+H   1.414214   0.000000   2.236068   4.472136  
+I   2.236068   2.236068   0.000000   2.236068  
+J   4.242641   4.472136   2.236068   0.000000  
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="langkah-perhitungan-lof-manual">
 <h2><strong>Langkah Perhitungan LOF Manual</strong><a class="headerlink" href="#langkah-perhitungan-lof-manual" title="Link to this heading">#</a></h2>
-<section id="langkah-1-menentukan-3-nn-3-tetangga-terdekat">
-<h3><strong>Langkah 1: Menentukan 3-NN (3 Tetangga Terdekat)</strong><a class="headerlink" href="#langkah-1-menentukan-3-nn-3-tetangga-terdekat" title="Link to this heading">#</a></h3>
+<section id="langkah-2-menentukan-3-nn-3-tetangga-terdekat">
+<h3><strong>Langkah 2: Menentukan 3-NN (3 Tetangga Terdekat)</strong><a class="headerlink" href="#langkah-2-menentukan-3-nn-3-tetangga-terdekat" title="Link to this heading">#</a></h3>
 <p>Kita hitung jarak Euclidean antara setiap titik. Misalnya, untuk titik <strong>A (10,10)</strong> ke titik <strong>B (11,10)</strong>:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -560,9 +617,41 @@ Jarak(A, B) = \sqrt{(10 - 11)^2 + (10 - 10)^2} = \sqrt{1} = 1
 </table>
 </div>
 <p>Untuk <strong>A</strong>, tetangga terdekatnya (3-NN) adalah: <strong>B, C, I</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Langkah 2: Menentukan 3-NN</span>
+<span class="k">def</span> <span class="nf">find_k_distance</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="n">sorted_dists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="n">k</span><span class="p">]</span>  <span class="c1"># Ambil jarak ke-3</span>
+    <span class="k">return</span> <span class="n">sorted_dists</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">k_distances</span> <span class="o">=</span> <span class="n">find_k_distance</span><span class="p">(</span><span class="n">dist_matrix</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+<span class="n">k_distance_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Point&#39;</span><span class="p">:</span> <span class="n">names</span><span class="p">,</span> <span class="s1">&#39;k-Distance&#39;</span><span class="p">:</span> <span class="n">k_distances</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Langkah 2: k-Distance&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">k_distance_df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Langkah 2: k-Distance
+  Point  k-Distance
+0     A    1.000000
+1     B    1.000000
+2     C    1.000000
+3     D   55.172457
+4     E    2.000000
+5     F    1.414214
+6     G    1.414214
+7     H    2.000000
+8     I    1.414214
+9     J    2.828427
+</pre></div>
+</div>
+</div>
+</div>
 </section>
-<section id="langkah-2-menghitung-jarak-keterjangkauan-reachability-distance">
-<h3><strong>Langkah 2: Menghitung Jarak Keterjangkauan (Reachability Distance)</strong><a class="headerlink" href="#langkah-2-menghitung-jarak-keterjangkauan-reachability-distance" title="Link to this heading">#</a></h3>
+<section id="langkah-3-menghitung-jarak-keterjangkauan-reachability-distance">
+<h3><strong>Langkah 3: Menghitung Jarak Keterjangkauan (Reachability Distance)</strong><a class="headerlink" href="#langkah-3-menghitung-jarak-keterjangkauan-reachability-distance" title="Link to this heading">#</a></h3>
 <p>Jarak keterjangkauan dihitung dengan:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -600,9 +689,48 @@ Jarak(A, B) = \sqrt{(10 - 11)^2 + (10 - 10)^2} = \sqrt{1} = 1
 </tbody>
 </table>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Langkah 3: Menghitung Reachability Distance</span>
+<span class="n">reach_distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">k_distances</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">dist_matrix</span><span class="p">)</span>
+<span class="n">reach_dist_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">reach_distances</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">names</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Langkah 3: Reachability Distance&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">reach_dist_df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Langkah 3: Reachability Distance
+           A          B          C          D          E          F  \
+A   1.000000   1.000000   1.000000  56.568542   2.000000   1.414214   
+B   1.000000   1.000000   1.414214  55.865911   1.000000   2.236068   
+C   1.000000   1.414214   1.000000  55.865911   2.236068   2.236068   
+D  56.568542  55.865911  55.865911  55.172457  55.172457  57.982756   
+E   2.000000   2.000000   2.236068  55.172457   2.000000   3.162278   
+F   1.414214   2.236068   2.236068  57.982756   3.162278   1.414214   
+G   1.414214   1.414214   1.414214  55.154329   1.414214   2.828427   
+H   2.000000   2.236068   2.000000  55.172457   2.828427   3.162278   
+I   1.414214   2.000000   1.414214  57.280014   3.000000   1.414214   
+J   2.828427   3.605551   3.605551  59.396970   4.472136   2.828427   
+
+           G          H          I          J  
+A   1.414214   2.000000   1.000000   2.828427  
+B   1.000000   2.236068   2.000000   3.605551  
+C   1.000000   1.000000   1.414214   3.605551  
+D  55.172457  55.172457  57.280014  59.396970  
+E   2.000000   2.828427   3.000000   4.472136  
+F   2.828427   3.162278   1.414214   1.414214  
+G   1.414214   1.414214   2.236068   4.242641  
+H   2.000000   2.000000   2.236068   4.472136  
+I   2.236068   2.236068   1.414214   2.236068  
+J   4.242641   4.472136   2.828427   2.828427  
+</pre></div>
+</div>
+</div>
+</div>
 </section>
-<section id="langkah-3-menghitung-kepadatan-lokal-local-reachability-density-lrd">
-<h3><strong>Langkah 3: Menghitung Kepadatan Lokal (Local Reachability Density - LRD)</strong><a class="headerlink" href="#langkah-3-menghitung-kepadatan-lokal-local-reachability-density-lrd" title="Link to this heading">#</a></h3>
+<section id="langkah-4-menghitung-kepadatan-lokal-local-reachability-density-lrd">
+<h3><strong>Langkah 4: Menghitung Kepadatan Lokal (Local Reachability Density - LRD)</strong><a class="headerlink" href="#langkah-4-menghitung-kepadatan-lokal-local-reachability-density-lrd" title="Link to this heading">#</a></h3>
 <p>LRD dihitung dengan rumus:</p>
 <div class="math notranslate nohighlight">
 \[
@@ -613,9 +741,40 @@ LRD(P) = \frac{k}{\sum\limits_{O \in kNN(P)} \frac{\text{reach-dist}(P, O)}{k} }
 \[
 LRD(A) = \frac{3}{\frac{2}{3} + \frac{2}{3} + \frac{1.41}{3}} = 0.6
 \]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Langkah 4: Menghitung Local Reachability Density (LRD)</span>
+<span class="k">def</span> <span class="nf">compute_lrd</span><span class="p">(</span><span class="n">reach_dist</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="n">lrd_values</span> <span class="o">=</span> <span class="n">k</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">reach_dist</span><span class="p">[:,</span> <span class="p">:</span><span class="n">k</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lrd_values</span>
+
+<span class="n">lrd_values</span> <span class="o">=</span> <span class="n">compute_lrd</span><span class="p">(</span><span class="n">reach_distances</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+<span class="n">lrd_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Point&#39;</span><span class="p">:</span> <span class="n">names</span><span class="p">,</span> <span class="s1">&#39;LRD&#39;</span><span class="p">:</span> <span class="n">lrd_values</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Langkah 4: Local Reachability Density&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lrd_df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Langkah 4: Local Reachability Density
+  Point       LRD
+0     A  1.000000
+1     B  0.878680
+2     C  0.878680
+3     D  0.017825
+4     E  0.481072
+5     F  0.509654
+6     G  0.707107
+7     H  0.481072
+8     I  0.621320
+9     J  0.298819
+</pre></div>
+</div>
+</div>
+</div>
 </section>
-<section id="langkah-4-menghitung-lof">
-<h3><strong>Langkah 4: Menghitung LOF</strong><a class="headerlink" href="#langkah-4-menghitung-lof" title="Link to this heading">#</a></h3>
+<section id="langkah-5-menghitung-lof">
+<h3><strong>Langkah 5: Menghitung LOF</strong><a class="headerlink" href="#langkah-5-menghitung-lof" title="Link to this heading">#</a></h3>
 <div class="math notranslate nohighlight">
 \[
 LOF(P) = \frac{\sum\limits_{O \in kNN(P)} \frac{LRD(O)}{LRD(P)}}{k}
@@ -627,6 +786,41 @@ LOF(P) = \frac{\sum\limits_{O \in kNN(P)} \frac{LRD(O)}{LRD(P)}}{k}
 <li><p>LOF Manual lainnya berkisar antara 0.6 - 0.9, yang berarti titik-titik tersebut memiliki kepadatan serupa dengan tetangga mereka (bukan outlier).</p></li>
 <li><p>Nilai LOF Manual ≈ LOF Scikit-learn setelah dikonversi dari negative_outlier_factor_.</p></li>
 </ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Langkah 5: Menghitung LOF</span>
+<span class="k">def</span> <span class="nf">compute_lof</span><span class="p">(</span><span class="n">lrd_values</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dist_matrix</span><span class="p">):</span>
+    <span class="n">lof_values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lrd_values</span><span class="p">)):</span>
+        <span class="n">neighbors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">dist_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">])[:</span><span class="n">k</span><span class="p">]</span>  <span class="c1"># 3 tetangga terdekat</span>
+        <span class="n">lof</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">lrd_values</span><span class="p">[</span><span class="n">neighbors</span><span class="p">]</span> <span class="o">/</span> <span class="n">lrd_values</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="n">k</span>
+        <span class="n">lof_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lof</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lof_values</span><span class="p">)</span>
+
+<span class="n">lof_values</span> <span class="o">=</span> <span class="n">compute_lof</span><span class="p">(</span><span class="n">lrd_values</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dist_matrix</span><span class="p">)</span>
+<span class="n">lof_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Point&#39;</span><span class="p">:</span> <span class="n">names</span><span class="p">,</span> <span class="s1">&#39;LOF&#39;</span><span class="p">:</span> <span class="n">lof_values</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Langkah 5: Local Outlier Factor&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lof_df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Langkah 5: Local Outlier Factor
+  Point        LOF
+0     A   0.919120
+1     B   0.980936
+2     C   0.980936
+3     D  22.552332
+4     E   1.432119
+5     F   0.935140
+6     G   1.161760
+7     H   1.432119
+8     I   1.143250
+9     J   1.594939
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="implementasi-dengan-scikit-learn">
@@ -831,12 +1025,15 @@ Data 10: LOF Score = 1.58
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-lof"><strong>Apa Itu LOF?</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cara-kerja-lof"><strong>Cara Kerja LOF</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perbandingan-hasil-lof-manual-vs-scikit-learn"><strong>Perbandingan Hasil LOF Manual vs Scikit-learn</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perbandingan-hasil-lof-manual-vs-scikit-learn"><strong>Perbandingan Hasil LOF Manual vs Scikit-learn</strong></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-menghitung-jarak-euclidean"><strong>Langkah 1: Menghitung Jarak Euclidean</strong></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-perhitungan-lof-manual"><strong>Langkah Perhitungan LOF Manual</strong></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-menentukan-3-nn-3-tetangga-terdekat"><strong>Langkah 1: Menentukan 3-NN (3 Tetangga Terdekat)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-menghitung-jarak-keterjangkauan-reachability-distance"><strong>Langkah 2: Menghitung Jarak Keterjangkauan (Reachability Distance)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-menghitung-kepadatan-lokal-local-reachability-density-lrd"><strong>Langkah 3: Menghitung Kepadatan Lokal (Local Reachability Density - LRD)</strong></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-4-menghitung-lof"><strong>Langkah 4: Menghitung LOF</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-menentukan-3-nn-3-tetangga-terdekat"><strong>Langkah 2: Menentukan 3-NN (3 Tetangga Terdekat)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-menghitung-jarak-keterjangkauan-reachability-distance"><strong>Langkah 3: Menghitung Jarak Keterjangkauan (Reachability Distance)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-4-menghitung-kepadatan-lokal-local-reachability-density-lrd"><strong>Langkah 4: Menghitung Kepadatan Lokal (Local Reachability Density - LRD)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-5-menghitung-lof"><strong>Langkah 5: Menghitung LOF</strong></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-dengan-scikit-learn"><strong>Implementasi dengan Scikit-learn</strong></a></li>
