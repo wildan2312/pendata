@@ -28,7 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -62,6 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'lof';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Cirrhosis Patient Survival Prediction" href="exam.html" />
     <link rel="prev" title="Data Understanding" href="tugas.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -184,6 +185,7 @@
 <li class="toctree-l1"><a class="reference internal" href="tugas.html"><strong>Data Understanding</strong></a></li>
 
 <li class="toctree-l1 current active"><a class="current reference internal" href="#"><strong>Local Outlier Factors</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="exam.html"><strong>Cirrhosis Patient Survival Prediction</strong></a></li>
 </ul>
 
     </div>
@@ -443,8 +445,8 @@ document.write(`
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">LocalOutlierFactor</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neighbors</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalOutlierFactor</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="c1"># Contoh dataset</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">],</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">]])</span>  <span class="c1"># Titik terakhir adalah outlier</span>
@@ -524,9 +526,9 @@ document.write(`
 <h3><strong>Langkah 1: Menghitung Jarak Euclidean</strong><a class="headerlink" href="#langkah-1-menghitung-jarak-euclidean" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">cdist</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.distance</span><span class="w"> </span><span class="kn">import</span> <span class="n">cdist</span>
 
 <span class="c1"># Data</span>
 <span class="n">points</span> <span class="o">=</span> <span class="p">{</span>
@@ -620,7 +622,7 @@ Jarak(A, B) = \sqrt{(10 - 11)^2 + (10 - 10)^2} = \sqrt{1} = 1
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Langkah 2: Menentukan 3-NN</span>
-<span class="k">def</span> <span class="nf">find_k_distance</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_k_distance</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
     <span class="n">sorted_dists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="n">k</span><span class="p">]</span>  <span class="c1"># Ambil jarak ke-3</span>
     <span class="k">return</span> <span class="n">sorted_dists</span>
 
@@ -744,7 +746,7 @@ LRD(A) = \frac{3}{\frac{2}{3} + \frac{2}{3} + \frac{1.41}{3}} = 0.6
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Langkah 4: Menghitung Local Reachability Density (LRD)</span>
-<span class="k">def</span> <span class="nf">compute_lrd</span><span class="p">(</span><span class="n">reach_dist</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_lrd</span><span class="p">(</span><span class="n">reach_dist</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
     <span class="n">lrd_values</span> <span class="o">=</span> <span class="n">k</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">reach_dist</span><span class="p">[:,</span> <span class="p">:</span><span class="n">k</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">lrd_values</span>
 
@@ -789,7 +791,7 @@ LOF(P) = \frac{\sum\limits_{O \in kNN(P)} \frac{LRD(O)}{LRD(P)}}{k}
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Langkah 5: Menghitung LOF</span>
-<span class="k">def</span> <span class="nf">compute_lof</span><span class="p">(</span><span class="n">lrd_values</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dist_matrix</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_lof</span><span class="p">(</span><span class="n">lrd_values</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dist_matrix</span><span class="p">):</span>
     <span class="n">lof_values</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lrd_values</span><span class="p">)):</span>
         <span class="n">neighbors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">dist_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">])[:</span><span class="n">k</span><span class="p">]</span>  <span class="c1"># 3 tetangga terdekat</span>
@@ -828,8 +830,8 @@ LOF(P) = \frac{\sum\limits_{O \in kNN(P)} \frac{LRD(O)}{LRD(P)}}{k}
 <p>Sekarang kita gunakan scikit-learn untuk mendapatkan hasil LOF secara otomatis.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">LocalOutlierFactor</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neighbors</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalOutlierFactor</span>
 
 <span class="c1"># Dataset (sama dengan perhitungan manual)</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
@@ -1006,6 +1008,15 @@ Data 10: LOF Score = 1.58
         <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title"><strong>Data Understanding</strong></p>
       </div>
+    </a>
+    <a class="right-next"
+       href="exam.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><strong>Cirrhosis Patient Survival Prediction</strong></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>

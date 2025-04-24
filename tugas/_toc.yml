@@ -6,4 +6,5 @@ root: intro
 chapters:
 - file: tugas
 - file: lof
+- file: exam
 
