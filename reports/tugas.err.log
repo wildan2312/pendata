@@ -56,18 +56,18 @@ print(pg_df)
 During handling of the above exception, another exception occurred:
 
 [31mOperationalError[39m                          Traceback (most recent call last)
-[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/engine/base.py:146[39m, in [36mConnection.__init__[39m[34m(self, engine, connection, _has_events, _allow_revalidate, _allow_autobegin)[39m
-[32m    145[39m [38;5;28;01mtry[39;00m:
-[32m--> [39m[32m146[39m     [38;5;28mself[39m._dbapi_connection = [43mengine[49m[43m.[49m[43mraw_connection[49m[43m([49m[43m)[49m
-[32m    147[39m [38;5;28;01mexcept[39;00m dialect.loaded_dbapi.Error [38;5;28;01mas[39;00m err:
+[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/engine/base.py:145[39m, in [36mConnection.__init__[39m[34m(self, engine, connection, _has_events, _allow_revalidate, _allow_autobegin)[39m
+[32m    144[39m [38;5;28;01mtry[39;00m:
+[32m--> [39m[32m145[39m     [38;5;28mself[39m._dbapi_connection = [43mengine[49m[43m.[49m[43mraw_connection[49m[43m([49m[43m)[49m
+[32m    146[39m [38;5;28;01mexcept[39;00m dialect.loaded_dbapi.Error [38;5;28;01mas[39;00m err:
 
-[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/engine/base.py:3298[39m, in [36mEngine.raw_connection[39m[34m(self)[39m
-[32m   3277[39m [38;5;250m[39m[33;03m"""Return a "raw" DBAPI connection from the connection pool.[39;00m
-[32m   3278[39m 
-[32m   3279[39m [33;03mThe returned object is a proxied version of the DBAPI[39;00m
-[32m   (...)[39m[32m   3296[39m 
-[32m   3297[39m [33;03m"""[39;00m
-[32m-> [39m[32m3298[39m [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[43m.[49m[43mpool[49m[43m.[49m[43mconnect[49m[43m([49m[43m)[49m
+[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/engine/base.py:3297[39m, in [36mEngine.raw_connection[39m[34m(self)[39m
+[32m   3276[39m [38;5;250m[39m[33;03m"""Return a "raw" DBAPI connection from the connection pool.[39;00m
+[32m   3277[39m 
+[32m   3278[39m [33;03mThe returned object is a proxied version of the DBAPI[39;00m
+[32m   (...)[39m[32m   3295[39m 
+[32m   3296[39m [33;03m"""[39;00m
+[32m-> [39m[32m3297[39m [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[43m.[49m[43mpool[49m[43m.[49m[43mconnect[49m[43m([49m[43m)[49m
 
 [36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/pool/base.py:449[39m, in [36mPool.connect[39m[34m(self)[39m
 [32m    442[39m [38;5;250m[39m[33;03m"""Return a DBAPI connection from the pool.[39;00m
@@ -92,10 +92,10 @@ During handling of the above exception, another exception occurred:
 [32m--> [39m[32m179[39m [43m    [49m[38;5;28;43;01mwith[39;49;00m[43m [49m[43mutil[49m[43m.[49m[43msafe_reraise[49m[43m([49m[43m)[49m[43m:[49m
 [32m    180[39m [43m        [49m[38;5;28;43mself[39;49m[43m.[49m[43m_dec_overflow[49m[43m([49m[43m)[49m
 
-[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py:146[39m, in [36msafe_reraise.__exit__[39m[34m(self, type_, value, traceback)[39m
-[32m    145[39m     [38;5;28mself[39m._exc_info = [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
-[32m--> [39m[32m146[39m     [38;5;28;01mraise[39;00m exc_value.with_traceback(exc_tb)
-[32m    147[39m [38;5;28;01melse[39;00m:
+[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py:224[39m, in [36msafe_reraise.__exit__[39m[34m(self, type_, value, traceback)[39m
+[32m    223[39m     [38;5;28mself[39m._exc_info = [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
+[32m--> [39m[32m224[39m     [38;5;28;01mraise[39;00m exc_value.with_traceback(exc_tb)
+[32m    225[39m [38;5;28;01melse[39;00m:
 
 [36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/pool/impl.py:177[39m, in [36mQueuePool._do_get[39m[34m(self)[39m
 [32m    176[39m [38;5;28;01mtry[39;00m:
@@ -116,10 +116,10 @@ During handling of the above exception, another exception occurred:
 [32m--> [39m[32m901[39m [43m    [49m[38;5;28;43;01mwith[39;49;00m[43m [49m[43mutil[49m[43m.[49m[43msafe_reraise[49m[43m([49m[43m)[49m[43m:[49m
 [32m    902[39m [43m        [49m[43mpool[49m[43m.[49m[43mlogger[49m[43m.[49m[43mdebug[49m[43m([49m[33;43m"[39;49m[33;43mError on connect(): [39;49m[38;5;132;43;01m%s[39;49;00m[33;43m"[39;49m[43m,[49m[43m [49m[43me[49m[43m)[49m
 
-[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py:146[39m, in [36msafe_reraise.__exit__[39m[34m(self, type_, value, traceback)[39m
-[32m    145[39m     [38;5;28mself[39m._exc_info = [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
-[32m--> [39m[32m146[39m     [38;5;28;01mraise[39;00m exc_value.with_traceback(exc_tb)
-[32m    147[39m [38;5;28;01melse[39;00m:
+[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py:224[39m, in [36msafe_reraise.__exit__[39m[34m(self, type_, value, traceback)[39m
+[32m    223[39m     [38;5;28mself[39m._exc_info = [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
+[32m--> [39m[32m224[39m     [38;5;28;01mraise[39;00m exc_value.with_traceback(exc_tb)
+[32m    225[39m [38;5;28;01melse[39;00m:
 
 [36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/pool/base.py:897[39m, in [36m_ConnectionRecord.__connect[39m[34m(self)[39m
 [32m    896[39m [38;5;28mself[39m.starttime = time.time()
@@ -183,48 +183,48 @@ The above exception was the direct cause of the following exception:
 [32m   1637[39m [38;5;28;01mif[39;00m need_transaction [38;5;129;01mand[39;00m [38;5;129;01mnot[39;00m con.in_transaction():
 [32m   1638[39m     [38;5;28mself[39m.exit_stack.enter_context(con.begin())
 
-[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/engine/base.py:3274[39m, in [36mEngine.connect[39m[34m(self)[39m
-[32m   3251[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34mconnect[39m([38;5;28mself[39m) -> Connection:
-[32m   3252[39m [38;5;250m    [39m[33;03m"""Return a new :class:`_engine.Connection` object.[39;00m
-[32m   3253[39m 
-[32m   3254[39m [33;03m    The :class:`_engine.Connection` acts as a Python context manager, so[39;00m
-[32m   (...)[39m[32m   3271[39m 
-[32m   3272[39m [33;03m    """[39;00m
-[32m-> [39m[32m3274[39m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[43m.[49m[43m_connection_cls[49m[43m([49m[38;5;28;43mself[39;49m[43m)[49m
+[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/engine/base.py:3273[39m, in [36mEngine.connect[39m[34m(self)[39m
+[32m   3250[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34mconnect[39m([38;5;28mself[39m) -> Connection:
+[32m   3251[39m [38;5;250m    [39m[33;03m"""Return a new :class:`_engine.Connection` object.[39;00m
+[32m   3252[39m 
+[32m   3253[39m [33;03m    The :class:`_engine.Connection` acts as a Python context manager, so[39;00m
+[32m   (...)[39m[32m   3270[39m 
+[32m   3271[39m [33;03m    """[39;00m
+[32m-> [39m[32m3273[39m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[43m.[49m[43m_connection_cls[49m[43m([49m[38;5;28;43mself[39;49m[43m)[49m
 
-[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/engine/base.py:148[39m, in [36mConnection.__init__[39m[34m(self, engine, connection, _has_events, _allow_revalidate, _allow_autobegin)[39m
-[32m    146[39m         [38;5;28mself[39m._dbapi_connection = engine.raw_connection()
-[32m    147[39m     [38;5;28;01mexcept[39;00m dialect.loaded_dbapi.Error [38;5;28;01mas[39;00m err:
-[32m--> [39m[32m148[39m         [43mConnection[49m[43m.[49m[43m_handle_dbapi_exception_noconnection[49m[43m([49m
-[32m    149[39m [43m            [49m[43merr[49m[43m,[49m[43m [49m[43mdialect[49m[43m,[49m[43m [49m[43mengine[49m
-[32m    150[39m [43m        [49m[43m)[49m
-[32m    151[39m         [38;5;28;01mraise[39;00m
-[32m    152[39m [38;5;28;01melse[39;00m:
+[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/engine/base.py:147[39m, in [36mConnection.__init__[39m[34m(self, engine, connection, _has_events, _allow_revalidate, _allow_autobegin)[39m
+[32m    145[39m         [38;5;28mself[39m._dbapi_connection = engine.raw_connection()
+[32m    146[39m     [38;5;28;01mexcept[39;00m dialect.loaded_dbapi.Error [38;5;28;01mas[39;00m err:
+[32m--> [39m[32m147[39m         [43mConnection[49m[43m.[49m[43m_handle_dbapi_exception_noconnection[49m[43m([49m
+[32m    148[39m [43m            [49m[43merr[49m[43m,[49m[43m [49m[43mdialect[49m[43m,[49m[43m [49m[43mengine[49m
+[32m    149[39m [43m        [49m[43m)[49m
+[32m    150[39m         [38;5;28;01mraise[39;00m
+[32m    151[39m [38;5;28;01melse[39;00m:
 
-[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/engine/base.py:2439[39m, in [36mConnection._handle_dbapi_exception_noconnection[39m[34m(cls, e, dialect, engine, is_disconnect, invalidate_pool_on_disconnect, is_pre_ping)[39m
-[32m   2437[39m [38;5;28;01melif[39;00m should_wrap:
-[32m   2438[39m     [38;5;28;01massert[39;00m sqlalchemy_exception [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m
-[32m-> [39m[32m2439[39m     [38;5;28;01mraise[39;00m sqlalchemy_exception.with_traceback(exc_info[[32m2[39m]) [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01me[39;00m
-[32m   2440[39m [38;5;28;01melse[39;00m:
-[32m   2441[39m     [38;5;28;01massert[39;00m exc_info[[32m1[39m] [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m
+[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/engine/base.py:2436[39m, in [36mConnection._handle_dbapi_exception_noconnection[39m[34m(cls, e, dialect, engine, is_disconnect, invalidate_pool_on_disconnect, is_pre_ping)[39m
+[32m   2434[39m [38;5;28;01melif[39;00m should_wrap:
+[32m   2435[39m     [38;5;28;01massert[39;00m sqlalchemy_exception [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m
+[32m-> [39m[32m2436[39m     [38;5;28;01mraise[39;00m sqlalchemy_exception.with_traceback(exc_info[[32m2[39m]) [38;5;28;01mfrom[39;00m[38;5;250m [39m[34;01me[39;00m
+[32m   2437[39m [38;5;28;01melse[39;00m:
+[32m   2438[39m     [38;5;28;01massert[39;00m exc_info[[32m1[39m] [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m
 
-[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/engine/base.py:146[39m, in [36mConnection.__init__[39m[34m(self, engine, connection, _has_events, _allow_revalidate, _allow_autobegin)[39m
-[32m    144[39m [38;5;28;01mif[39;00m connection [38;5;129;01mis[39;00m [38;5;28;01mNone[39;00m:
-[32m    145[39m     [38;5;28;01mtry[39;00m:
-[32m--> [39m[32m146[39m         [38;5;28mself[39m._dbapi_connection = [43mengine[49m[43m.[49m[43mraw_connection[49m[43m([49m[43m)[49m
-[32m    147[39m     [38;5;28;01mexcept[39;00m dialect.loaded_dbapi.Error [38;5;28;01mas[39;00m err:
-[32m    148[39m         Connection._handle_dbapi_exception_noconnection(
-[32m    149[39m             err, dialect, engine
-[32m    150[39m         )
+[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/engine/base.py:145[39m, in [36mConnection.__init__[39m[34m(self, engine, connection, _has_events, _allow_revalidate, _allow_autobegin)[39m
+[32m    143[39m [38;5;28;01mif[39;00m connection [38;5;129;01mis[39;00m [38;5;28;01mNone[39;00m:
+[32m    144[39m     [38;5;28;01mtry[39;00m:
+[32m--> [39m[32m145[39m         [38;5;28mself[39m._dbapi_connection = [43mengine[49m[43m.[49m[43mraw_connection[49m[43m([49m[43m)[49m
+[32m    146[39m     [38;5;28;01mexcept[39;00m dialect.loaded_dbapi.Error [38;5;28;01mas[39;00m err:
+[32m    147[39m         Connection._handle_dbapi_exception_noconnection(
+[32m    148[39m             err, dialect, engine
+[32m    149[39m         )
 
-[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/engine/base.py:3298[39m, in [36mEngine.raw_connection[39m[34m(self)[39m
-[32m   3276[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34mraw_connection[39m([38;5;28mself[39m) -> PoolProxiedConnection:
-[32m   3277[39m [38;5;250m    [39m[33;03m"""Return a "raw" DBAPI connection from the connection pool.[39;00m
-[32m   3278[39m 
-[32m   3279[39m [33;03m    The returned object is a proxied version of the DBAPI[39;00m
-[32m   (...)[39m[32m   3296[39m 
-[32m   3297[39m [33;03m    """[39;00m
-[32m-> [39m[32m3298[39m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[43m.[49m[43mpool[49m[43m.[49m[43mconnect[49m[43m([49m[43m)[49m
+[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/engine/base.py:3297[39m, in [36mEngine.raw_connection[39m[34m(self)[39m
+[32m   3275[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34mraw_connection[39m([38;5;28mself[39m) -> PoolProxiedConnection:
+[32m   3276[39m [38;5;250m    [39m[33;03m"""Return a "raw" DBAPI connection from the connection pool.[39;00m
+[32m   3277[39m 
+[32m   3278[39m [33;03m    The returned object is a proxied version of the DBAPI[39;00m
+[32m   (...)[39m[32m   3295[39m 
+[32m   3296[39m [33;03m    """[39;00m
+[32m-> [39m[32m3297[39m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[43m.[49m[43mpool[49m[43m.[49m[43mconnect[49m[43m([49m[43m)[49m
 
 [36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/pool/base.py:449[39m, in [36mPool.connect[39m[34m(self)[39m
 [32m    441[39m [38;5;28;01mdef[39;00m[38;5;250m [39m[34mconnect[39m([38;5;28mself[39m) -> PoolProxiedConnection:
@@ -260,12 +260,12 @@ The above exception was the direct cause of the following exception:
 [32m    180[39m [43m        [49m[38;5;28;43mself[39;49m[43m.[49m[43m_dec_overflow[49m[43m([49m[43m)[49m
 [32m    181[39m     [38;5;28;01mraise[39;00m
 
-[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py:146[39m, in [36msafe_reraise.__exit__[39m[34m(self, type_, value, traceback)[39m
-[32m    144[39m     [38;5;28;01massert[39;00m exc_value [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m
-[32m    145[39m     [38;5;28mself[39m._exc_info = [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
-[32m--> [39m[32m146[39m     [38;5;28;01mraise[39;00m exc_value.with_traceback(exc_tb)
-[32m    147[39m [38;5;28;01melse[39;00m:
-[32m    148[39m     [38;5;28mself[39m._exc_info = [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
+[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py:224[39m, in [36msafe_reraise.__exit__[39m[34m(self, type_, value, traceback)[39m
+[32m    222[39m     [38;5;28;01massert[39;00m exc_value [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m
+[32m    223[39m     [38;5;28mself[39m._exc_info = [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
+[32m--> [39m[32m224[39m     [38;5;28;01mraise[39;00m exc_value.with_traceback(exc_tb)
+[32m    225[39m [38;5;28;01melse[39;00m:
+[32m    226[39m     [38;5;28mself[39m._exc_info = [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
 
 [36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/pool/impl.py:177[39m, in [36mQueuePool._do_get[39m[34m(self)[39m
 [32m    175[39m [38;5;28;01mif[39;00m [38;5;28mself[39m._inc_overflow():
@@ -294,12 +294,12 @@ The above exception was the direct cause of the following exception:
 [32m    904[39m     [38;5;66;03m# in SQLAlchemy 1.4 the first_connect event is not used by[39;00m
 [32m    905[39m     [38;5;66;03m# the engine, so this will usually not be set[39;00m
 
-[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py:146[39m, in [36msafe_reraise.__exit__[39m[34m(self, type_, value, traceback)[39m
-[32m    144[39m     [38;5;28;01massert[39;00m exc_value [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m
-[32m    145[39m     [38;5;28mself[39m._exc_info = [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
-[32m--> [39m[32m146[39m     [38;5;28;01mraise[39;00m exc_value.with_traceback(exc_tb)
-[32m    147[39m [38;5;28;01melse[39;00m:
-[32m    148[39m     [38;5;28mself[39m._exc_info = [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
+[36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py:224[39m, in [36msafe_reraise.__exit__[39m[34m(self, type_, value, traceback)[39m
+[32m    222[39m     [38;5;28;01massert[39;00m exc_value [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m
+[32m    223[39m     [38;5;28mself[39m._exc_info = [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
+[32m--> [39m[32m224[39m     [38;5;28;01mraise[39;00m exc_value.with_traceback(exc_tb)
+[32m    225[39m [38;5;28;01melse[39;00m:
+[32m    226[39m     [38;5;28mself[39m._exc_info = [38;5;28;01mNone[39;00m  [38;5;66;03m# remove potential circular references[39;00m
 
 [36mFile [39m[32m/usr/local/python/3.12.1/lib/python3.12/site-packages/sqlalchemy/pool/base.py:897[39m, in [36m_ConnectionRecord.__connect[39m[34m(self)[39m
 [32m    895[39m [38;5;28;01mtry[39;00m:
