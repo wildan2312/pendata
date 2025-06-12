@@ -8,3 +8,4 @@ chapters:
 - file: lof
 - file: exam
 - file: k-mean
+- file: DecisionTree
