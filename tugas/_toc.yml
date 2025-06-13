@@ -9,3 +9,4 @@ chapters:
 - file: exam
 - file: k-mean
 - file: DecisionTree
+- file: Binning
