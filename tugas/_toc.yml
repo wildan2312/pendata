@@ -10,3 +10,4 @@ chapters:
 - file: k-mean
 - file: DecisionTree
 - file: Binning
+- file: PraUAS
