@@ -100,10 +100,10 @@ Information Gain untuk 'sepal length': 0.3680
 Information Gain untuk 'sepal width': 0.1822
 Information Gain untuk 'petal length': 1.4463
 Information Gain untuk 'petal width': 1.4359
+----- stdout -----
 
 === Decision Tree (Data Asli - Numerik) ===
 Akurasi: 1.0
------ stdout -----
                  precision    recall  f1-score   support
 
     Iris-setosa       1.00      1.00      1.00        19
